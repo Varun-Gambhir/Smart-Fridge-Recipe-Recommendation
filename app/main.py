@@ -54,7 +54,7 @@ def get_recipes(selected_ingredients):
     recipe_list = "\n".join([f"{i+1}. {r}" for i, r in enumerate(recipes)])
     return recipe_list, gr.Dropdown(choices=recipes, value=None)
 
-def show_recipe_details(recipe_name, selected_ingredients):
+def show_recipe_details(recipe_name, selected_ingredients, serving_size):
     if not recipe_name:
         return ("", "", "", "", "", "")
     
@@ -63,7 +63,7 @@ def show_recipe_details(recipe_name, selected_ingredients):
         name = re.sub(r'\s*\(\d+\)$', '', item).lower()
         counts[name] = counts.get(name, 0) + 1
     
-    detailed_recipe = generate_detailed_recipe(recipe_name, counts)
+    detailed_recipe = generate_detailed_recipe(recipe_name, counts, serving_size)
     sections = parse_recipe_sections(detailed_recipe)
     
     ingredients_html = recipe_section_template(
@@ -113,24 +113,47 @@ with gr.Blocks(theme=CoolTheme(), css=css) as demo:
             with gr.Column(scale=1):
                 gr.Markdown("### 🖼️ Image Source", elem_classes=["section-header"])
                 with gr.Row():
-                    capture_btn = gr.Button("📸 Capture Image", variant="primary")
-                    upload_btn = gr.UploadButton("📁 Upload Image", file_types=["image"])
-                status = gr.Textbox(label="Status", interactive=False)
+                    capture_btn = gr.Button("📸 Capture Image", variant="primary", elem_classes=["btn-primary"])
+                    upload_btn = gr.UploadButton("📁 Upload Image", file_types=["image"], elem_classes=["btn-secondary"])
+                status = gr.Textbox(label="Status", interactive=False, elem_classes=["status-success"])
                 
                 gr.Markdown("### 🔍 Detected Ingredients", elem_classes=["section-header"])
-                annotated_output = gr.Image(label="Food Detection", interactive=False)
+                annotated_output = gr.Image(label="Food Detection", interactive=False, elem_classes=["image-container"])
             
             with gr.Column(scale=1):
                 gr.Markdown("### 🥗 Selected Ingredients", elem_classes=["section-header"])
-                ingredients_output = gr.CheckboxGroup(label="Ingredients in your fridge", choices=[])
-                generate_btn = gr.Button("🍳 Suggest Recipes", variant="primary")
-                
-                gr.Markdown("### 📝 Recipe Suggestions", elem_classes=["section-header"])
-                recipe_output = gr.Textbox(label="Suggested Recipes", lines=4, interactive=False)
+                ingredients_output = gr.CheckboxGroup(
+                    label="Ingredients in your fridge", 
+                    choices=[],
+                    interactive=True,
+                    elem_classes=["checkbox-group"]
+                )
                 
                 with gr.Row():
-                    recipe_selector = gr.Dropdown(label="Choose a recipe to view details", choices=[])
-                    show_btn = gr.Button("👩‍🍳 Show Full Recipe", variant="primary")
+                    generate_btn = gr.Button("🍳 Suggest Recipes", variant="primary", elem_classes=["btn-primary"])
+                    serving_size = gr.Dropdown(
+                        label="Serving Size", 
+                        choices=[1, 2, 3, 4, 5, 6], 
+                        value=2,
+                        elem_classes=["dropdown"]
+                    )
+                
+                gr.Markdown("### 📝 Recipe Suggestions", elem_classes=["section-header"])
+                recipe_output = gr.Textbox(
+                    label="Suggested Recipes", 
+                    lines=4, 
+                    interactive=False,
+                    elem_classes=["text-content"]
+                )
+                
+                with gr.Row():
+                    recipe_selector = gr.Dropdown(
+                        label="Choose a recipe to view details", 
+                        choices=[],
+                        interactive=True,
+                        elem_classes=["dropdown"]
+                    )
+                    show_btn = gr.Button("👩‍🍳 Show Full Recipe", variant="primary", elem_classes=["btn-primary"])
         
         gr.Markdown("## 🍽️ Recipe Details", elem_classes=["section-header"])
         
@@ -138,9 +161,11 @@ with gr.Blocks(theme=CoolTheme(), css=css) as demo:
             with gr.Row():
                 ingredients_section = gr.HTML()
                 time_section = gr.HTML()
+            
             with gr.Row():
                 equipment_section = gr.HTML()
                 serving_section = gr.HTML()
+            
             instructions_section = gr.HTML()
             tips_section = gr.HTML()
 
@@ -164,7 +189,7 @@ with gr.Blocks(theme=CoolTheme(), css=css) as demo:
     
     show_btn.click(
         show_recipe_details,
-        inputs=[recipe_selector, ingredients_output],
+        inputs=[recipe_selector, ingredients_output, serving_size],
         outputs=[ingredients_section, time_section, equipment_section, serving_section, instructions_section, tips_section]
     )
 

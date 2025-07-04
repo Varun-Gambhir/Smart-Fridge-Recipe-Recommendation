@@ -41,18 +41,19 @@ Format as numbered list with PLAIN TEXT names only (no formatting):
     except Exception:
         return []
 
-def generate_detailed_recipe(recipe_name, selected_ingredients):
+def generate_detailed_recipe(recipe_name, selected_ingredients, serving_size=2):
     ingredients_list = [f"{count} {item}{'s' if count > 1 else ''}" 
                        for item, count in selected_ingredients.items()]
     ingredients_text = ", ".join(ingredients_list)
     
     detailed_prompt = f"""
 Create a detailed recipe for "{recipe_name}" using: {ingredients_text}.
+Scale all ingredient quantities to serve exactly {serving_size} people.
 
 Structure the response with these exact sections:
 
 **INGREDIENTS:**
-List all ingredients needed, clearly marking which are available from the detected ingredients and which need to be added.
+List all ingredients needed for {serving_size} servings, clearly marking which are available from the detected ingredients and which need to be added.
 
 **PREP TIME:**
 Preparation time in minutes
@@ -64,13 +65,13 @@ Cooking time in minutes
 List all kitchen tools and equipment required
 
 **SERVING SIZE:**
-Number of servings this recipe makes
+{serving_size} servings
 
 **CALORIES:**
 Approximate calories per serving
 
 **INSTRUCTIONS:**
-Provide clear, numbered step-by-step cooking instructions
+Provide clear, numbered step-by-step cooking instructions scaled for {serving_size} servings
 
 **TIPS FOR SUCCESS:**
 Helpful tips and variations for best results

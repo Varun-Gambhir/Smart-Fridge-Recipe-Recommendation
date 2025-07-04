@@ -40,6 +40,11 @@
     font-weight: 400 !important;
 }
 
+.btn-primary, .btn-secondary {
+    transition: all 0.3s ease !important;
+    transform: scale(1) !important;
+}
+
 .btn-primary {
     background: linear-gradient(135deg, #2c7744 0%, #5a3f37 100%) !important;
     border: none !important;
@@ -48,12 +53,13 @@
     font-weight: 600 !important;
     font-size: 1.1rem !important;
     color: white !important;
-    box-shadow: 0 5px 15px rgba(44, 119, 68, 0.3) !important;
+    box-shadow: 0 5px 15px rgba(39, 104, 104, 0.3) !important;
+    animation: pulse 2s infinite;
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 8px 25px rgba(44, 119, 68, 0.4) !important;
+    transform: scale(1.05) translateY(-3px) !important;
+    box-shadow: 0 10px 25px rgba(117, 44, 119, 0.5) !important;
 }
 
 .btn-secondary {
@@ -68,7 +74,19 @@
 
 .btn-secondary:hover {
     background: #e0f0e5 !important;
-    transform: translateY(-2px) !important;
+    transform: scale(1.05) translateY(-2px) !important;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    transform: translateY(0) rotate(0) !important;
+    will-change: transform;
+}
+
+.card:hover {
+    transform: translateY(-10px) rotate(1deg) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+    z-index: 10;
 }
 
 .image-container {
@@ -76,6 +94,11 @@
     overflow: hidden !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
     border: 1px solid #e0e0e0 !important;
+    transition: transform 0.3s ease !important;
+}
+
+.image-container:hover {
+    transform: scale(1.02) !important;
 }
 
 .checkbox-group {
@@ -87,28 +110,53 @@
     overflow-y: auto;
 }
 
-.status-success {
-    background: linear-gradient(135deg, #2c7744, #4ca771) !important;
+.status-success, .status-error {
+    transition: all 0.3s ease !important;
     color: white !important;
     padding: 14px 20px !important;
     border-radius: 12px !important;
-    box-shadow: 0 4px 15px rgba(44, 119, 68, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+.status-success {
+    background: linear-gradient(135deg, #2c7744, #4ca771) !important;
 }
 
 .status-error {
     background: linear-gradient(135deg, #d9534f, #e27d7a) !important;
-    color: white !important;
-    padding: 14px 20px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3) !important;
+}
+
+.status-success:hover, .status-error:hover {
+    transform: scale(1.02) !important;
 }
 
 .recipe-section {
-    background: white !important;
+    background: rgba(40, 40, 40, 0.9) !important;
+    color: #fff !important;
     border-radius: 16px !important;
     padding: 1.8rem !important;
     margin: 1.2rem 0 !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.recipe-section h3, 
+.recipe-section h4,
+.recipe-section strong {
+    color: #fff !important;
+}
+
+.recipe-section > div {
+    transition: all 0.3s ease !important;
+}
+
+.recipe-section > div:hover {
+    transform: scale(1.02) !important;
+    z-index: 5;
+}
+
+.tip-box, .checkbox-group {
+    background: rgba(30, 30, 30, 0.9) !important;
+    color: #f8f8f8 !important;
 }
 
 .section-header {
@@ -128,4 +176,11 @@
         margin: 1rem !important;
         padding: 1.5rem !important;
     }
+}
+
+/* Subtle pulse animation for buttons */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
